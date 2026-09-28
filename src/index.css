@@ -1,0 +1,84 @@
+:root {
+  --forest-dark: #0f2419;
+  --forest-primary: #1b4332;
+  --forest-secondary: #2d6a4f;
+  --forest-medium: #40916c;
+  --forest-light: #52b788;
+  --forest-subtle: #d8f3dc;
+  --forest-bg: #f8faf9;
+  
+  --font-family-base: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-base);
+  background-color: var(--forest-bg);
+  color: #2b2d42;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom Forest Theme utilities */
+.bg-forest {
+  background-color: var(--forest-primary) !important;
+}
+
+.bg-forest-hero {
+  background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 60%, #1f4e38 100%);
+}
+
+.text-forest {
+  color: var(--forest-primary) !important;
+}
+
+.text-success-light {
+  color: #74c69d !important;
+}
+
+.btn-forest {
+  background-color: var(--forest-primary);
+  border-color: var(--forest-primary);
+  color: #ffffff;
+}
+
+.btn-forest:hover, .btn-forest:focus {
+  background-color: var(--forest-secondary);
+  border-color: var(--forest-secondary);
+  color: #ffffff;
+}
+
+.btn-outline-forest {
+  border-color: var(--forest-secondary);
+  color: var(--forest-secondary);
+}
+
+.btn-outline-forest:hover, .btn-outline-forest:focus {
+  background-color: var(--forest-secondary);
+  color: #ffffff;
+}
+
+.brand-icon-wrapper {
+  width: 40px;
+  height: 40px;
+}
+
+.backdrop-blur {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

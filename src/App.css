@@ -1,0 +1,79 @@
+/* App Styles for Viveiro Bioterra */
+
+.transition-all {
+  transition: all 0.25s ease-in-out;
+}
+
+.spin {
+  display: inline-block;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.transition-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.transition-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04) !important;
+}
+
+.hover-lift:hover {
+  background-color: #f1f5f3 !important;
+  border-color: #52b788 !important;
+}
+
+.plant-card {
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+.plant-image {
+  filter: brightness(0.92);
+  transition: transform 0.4s ease;
+}
+
+.plant-card:hover .plant-image {
+  transform: scale(1.03);
+}
+
+.plant-gradient-overlay {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.1) 40%, rgba(0, 0, 0, 0.75) 100%);
+}
+
+.drop-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.max-w-xl {
+  max-width: 650px;
+}
+
+/* Badge styling tweaks */
+.badge {
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
