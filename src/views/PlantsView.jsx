@@ -125,7 +125,7 @@ export default function PlantsView({ plants, onSelectPlant }) {
       <div className="alert alert-light border rounded-4 mt-4 p-3 d-flex align-items-center gap-3">
         <i className="bi bi-info-circle-fill text-primary fs-3"></i>
         <div className="small text-secondary">
-          <strong>Critérios de Risco de Acordo com a Cultura:</strong> As faixas de tolerância hídrica, térmica e pluviométrica foram parametrizadas conforme a literatura agronômica para a <em>Alface Solaris</em> (hidroponia/queima de bordas), <em>Flor do Deserto</em> (suscetibilidade ao apodrecimento de raízes) e <em>Salsinha</em> (sensibilidade ao encharcamento e calor).
+          <strong>Critérios de Risco de Acordo com a Cultura:</strong> As faixas de tolerância hídrica, térmica e pluviométrica foram parametrizadas conforme a literatura agronômica para a <em>Alface Solaris</em> (hidroponia/queima de bordas), <em>Rosa do Deserto</em> (suscetibilidade ao apodrecimento de raízes) e <em>Salsinha</em> (sensibilidade ao encharcamento e calor).
         </div>
       </div>
     </div>

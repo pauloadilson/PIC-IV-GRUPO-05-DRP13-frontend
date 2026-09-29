@@ -32,7 +32,7 @@ export default function Footer() {
                 </span>
               </div>
               <span className="small text-muted">
-                Culturas Alvo: Alface Solaris &bull; Salsinha &bull; Flor do Deserto
+                Culturas Alvo: Alface Solaris &bull; Salsinha &bull; Rosa do Deserto
               </span>
             </div>
           </div>

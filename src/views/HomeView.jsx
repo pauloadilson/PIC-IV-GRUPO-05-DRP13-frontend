@@ -17,7 +17,7 @@ export default function HomeView({ weather, plants, onSelectPlant, onNavigateToP
             Bem-vindo ao Viveiro Bioterra
           </h1>
           <p className="lead fs-6 text-white-50 mb-4 max-w-xl">
-            Solução tecnológica para mitigação de riscos climáticos e otimização do cultivo protegido de <strong>Alface Solaris</strong>, <strong>Salsinha</strong> e <strong>Flor do Deserto</strong>.
+            Solução tecnológica para mitigação de riscos climáticos e otimização do cultivo protegido de <strong>Alface Solaris</strong>, <strong>Salsinha</strong> e <strong>Rosa do Deserto</strong>.
           </p>
           <div className="d-flex flex-wrap gap-2">
             <button

@@ -69,7 +69,7 @@ export const mockGeneralWeather = {
   ]
 };
 
-// Culturas foco: Alface Solaris, Salsinha e Flor do Deserto
+// Culturas foco: Alface Solaris, Salsinha e Rosa do Deserto
 export const mockPlants = [
   {
     id: "alface-solaris",
@@ -160,8 +160,8 @@ export const mockPlants = [
     }
   },
   {
-    id: "flor-do-deserto",
-    name: "Flor do Deserto",
+    id: "Rosa-do-deserto",
+    name: "Rosa do Deserto",
     scientificName: "Adenium obesum",
     category: "Planta Ornamental Suculenta",
     greenhouse: "Estufa 03 - Setor Árido",
