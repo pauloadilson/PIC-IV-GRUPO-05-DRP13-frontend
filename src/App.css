@@ -77,3 +77,8 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
+
+.bg-white {
+    --bs-bg-opacity: 0.2;
+    background-color: rgba(var(--bs-white-rgb), var(--bs-bg-opacity)) !important;
+}

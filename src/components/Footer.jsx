@@ -21,10 +21,10 @@ export default function Footer() {
           <div className="col-12 col-md-6 text-center text-md-end">
             <div className="d-inline-flex flex-column align-items-center align-items-md-end">
               <div className="d-flex gap-2 mb-2">
-                <span className="badge bg-secondary-subtle text-light border border-secondary border-opacity-50">
+                <span className="badge text-light border border-secondary border-opacity-50">
                   React 19 + Vite
                 </span>
-                <span className="badge bg-secondary-subtle text-light border border-secondary border-opacity-50">
+                <span className="badge text-light border border-secondary border-opacity-50">
                   Bootstrap 5.3
                 </span>
                 <span className="badge bg-success-subtle text-success border border-success-subtle">
