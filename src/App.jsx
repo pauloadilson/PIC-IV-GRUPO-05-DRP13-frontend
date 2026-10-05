@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import HomeView from './views/HomeView';
 import PlantsView from './views/PlantsView';
 import PlantModal from './components/PlantModal';
 import Footer from './components/Footer';
 import { mockGeneralWeather, mockPlants } from './data/mockData';
+import { fetchDashboardData } from './services/weatherService';
 import './App.css';
 
 export default function App() {
@@ -13,22 +14,23 @@ export default function App() {
   const [weatherData, setWeatherData] = useState(mockGeneralWeather);
   const [plantsData, setPlantsData] = useState(mockPlants);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isLiveApi, setIsLiveApi] = useState(false);
+
+  const loadData = async () => {
+    setIsRefreshing(true);
+    const result = await fetchDashboardData();
+    setWeatherData(result.weather);
+    setPlantsData(result.plants);
+    setIsLiveApi(result.isLive);
+    setIsRefreshing(false);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   const handleRefresh = () => {
-    setIsRefreshing(true);
-    setTimeout(() => {
-      setWeatherData((prev) => ({
-        ...prev,
-        lastUpdated: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-        current: {
-          ...prev.current,
-          temp: +(25.5 + Math.random() * 2).toFixed(1),
-          humidity: Math.floor(65 + Math.random() * 8),
-        }
-      }));
-      setPlantsData((prev) => [...prev]);
-      setIsRefreshing(false);
-    }, 400);
+    loadData();
   };
 
   const handleSelectPlant = (plant) => {
@@ -47,6 +49,7 @@ export default function App() {
         setActiveTab={setActiveTab}
         onRefresh={handleRefresh}
         isRefreshing={isRefreshing}
+        isLiveApi={isLiveApi}
       />
 
       {/* Conteúdo Principal */}

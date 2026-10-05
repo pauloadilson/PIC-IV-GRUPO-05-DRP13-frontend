@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Navbar({ activeTab, setActiveTab, onRefresh, isRefreshing }) {
+export default function Navbar({ activeTab, setActiveTab, onRefresh, isRefreshing, isLiveApi }) {
   return (
     <header className="sticky-top shadow-sm">
       {/* Top micro-bar */}
@@ -21,13 +21,14 @@ export default function Navbar({ activeTab, setActiveTab, onRefresh, isRefreshin
               style={{ fontSize: '0.72rem' }}
               onClick={onRefresh}
               disabled={isRefreshing}
-              title="Simular leitura dos sensores"
+              title="Atualizar dados da estação meteorológica"
             >
               <i className={`bi bi-arrow-clockwise me-1 ${isRefreshing ? 'spin' : ''}`}></i>
               {isRefreshing ? 'Atualizando...' : 'Atualizar Telemetria'}
             </button>
-            <span className="badge bg-warning text-dark font-monospace fw-semibold">
-              MOCK DATA ATIVO
+            <span className={`badge font-monospace fw-semibold ${isLiveApi ? 'bg-success text-white' : 'bg-warning text-dark'}`}>
+              <i className={`bi ${isLiveApi ? 'bi-cloud-check-fill' : 'bi-shield-exclamation'} me-1`}></i>
+              {isLiveApi ? 'API LIVE' : 'MOCK DE CONTINGÊNCIA'}
             </span>
           </div>
         </div>

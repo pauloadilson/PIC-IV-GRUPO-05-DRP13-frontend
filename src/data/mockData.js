@@ -87,7 +87,7 @@ export const mockPlants = [
         unit: "%",
         status: "Ideal",
         level: "success",
-        optimalRange: "65% - 80%",
+        optimalRange: "60% - 80%",
         icon: "bi-droplet-half"
       },
       temperature: {
@@ -95,7 +95,7 @@ export const mockPlants = [
         unit: "°C",
         status: "Elevada",
         level: "warning",
-        optimalRange: "18°C - 24°C",
+        optimalRange: "15°C - 25°C",
         icon: "bi-thermometer-half"
       },
       rain: {
@@ -114,7 +114,7 @@ export const mockPlants = [
         icon: "bi-cloud-sun"
       }
     },
-    // Riscos específicos solicitados: Dias nublados, Risco de Stress, Tempo sem chuva
+    // Riscos específicos fundamentados: Dias nublados, Risco de Stress, Tempo sem chuva
     risks: [
       {
         id: "dias-nublados",
@@ -123,7 +123,7 @@ export const mockPlants = [
         level: "warning",
         badge: "2 dias consecutivos",
         value: "2 dias",
-        description: "Luminosidade abaixo de 350 µmol/m²/s. Risco de estiolamento foliar caso persista por mais de 3 dias.",
+        description: "Radiação reduzida. Persistência de baixa luminosidade por mais de 3 dias induz estiolamento das folhas.",
         icon: "bi-cloud-slash"
       },
       {
@@ -132,8 +132,8 @@ export const mockPlants = [
         status: "Atenção Térmica",
         level: "danger",
         badge: "Stress Térmico Alto",
-        value: "Alto (T > 27°C)",
-        description: "Temperatura interna próxima a 28°C acarreta 'tipburn' (queima de bordas) e indução ao pendoamento precoce.",
+        value: "Alto (T > 26°C)",
+        description: "Temperaturas acima de 26°C induzem pendoamento precoce e aumentam o risco de 'tipburn' (queima das bordas foliares).",
         icon: "bi-exclamation-triangle"
       },
       {
@@ -148,15 +148,15 @@ export const mockPlants = [
       }
     ],
     recommendations: [
-      "Ligar nebulizadores para reduzir temperatura interna na estufa.",
-      "Manter o sombrite com 50% de retenção acionado das 11h às 15h.",
-      "Verificar condutividade elétrica da solução nutritiva para evitar salinização."
+      "Ligar nebulizadores para reduzir temperatura interna na estufa caso T > 26°C.",
+      "Acionar tela de sombreamento (sombrite) nos horários de maior incidência solar (11h às 15h) para mitigar tipburn.",
+      "Garantir aeração lateral e zenital (janelas/lanternim) para manter a umidade relativa entre 60% e 80%."
     ],
     idealConditions: {
-      temp: "18°C - 24°C",
-      humidity: "65% - 80%",
-      light: "Alta luminosidade difusa",
-      soilMoisture: "Substrato ou solução úmida e oxigenada"
+      temp: "15°C - 25°C (tolerante até 28°C em cultivo de verão)",
+      humidity: "60% - 80%",
+      light: "Alta luminosidade difusa (protegida contra radiação excessiva)",
+      soilMoisture: "Substrato hidropônico umedecido e oxigenado"
     }
   },
   {
@@ -176,7 +176,7 @@ export const mockPlants = [
         unit: "%",
         status: "Atenção (Alta)",
         level: "warning",
-        optimalRange: "40% - 60%",
+        optimalRange: "30% - 60%",
         icon: "bi-droplet-half"
       },
       temperature: {
@@ -184,7 +184,7 @@ export const mockPlants = [
         unit: "°C",
         status: "Ótima",
         level: "success",
-        optimalRange: "24°C - 35°C",
+        optimalRange: "25°C - 35°C",
         icon: "bi-thermometer-sun"
       },
       rain: {
@@ -212,7 +212,7 @@ export const mockPlants = [
         level: "danger",
         badge: "Risco de Apodrecimento Radicular",
         value: "68% UR (Crítico p/ fungos)",
-        description: "Umidade relativa acima de 65% combinada com substrato úmido favorece infecções fúngicas no caudex.",
+        description: "Umidade relativa acima de 60% combinada com substrato úmido favorece infecções fúngicas e apodrecimento no caudex.",
         icon: "bi-water"
       },
       {
@@ -228,14 +228,14 @@ export const mockPlants = [
     ],
     recommendations: [
       "Suspender regas até que o substrato atinja dessecação superficial completa.",
-      "Aumentar ventilação cruzada na estufa para baixar a umidade relativa do ar.",
-      "Inspeção visual periódica na base do caudex para detectar amolecimento precoce."
+      "Aumentar ventilação cruzada na estufa para baixar a umidade relativa do ar para a faixa de 30% a 60%.",
+      "Manter sombreamento moderado (tela de 35%) na formação de mudas para potencializar desenvolvimento do caudex sem induzir estiolamento."
     ],
     idealConditions: {
-      temp: "24°C - 35°C",
-      humidity: "40% - 55%",
-      light: "Sol pleno (alta radiação)",
-      soilMoisture: "Substrato drenável, seco entre as regas"
+      temp: "25°C - 35°C (sensível ao frio severo < 14°C)",
+      humidity: "30% - 60%",
+      light: "Sol pleno a sombreamento moderado (tela de 35% na fase de mudas)",
+      soilMoisture: "Substrato altamente drenável, seco entre as regas"
     }
   },
   {
@@ -248,14 +248,14 @@ export const mockPlants = [
     badgeLevel: "success",
     // image: "https://images.unsplash.com/photo-1592417817098-8f3d6910985b?auto=format&fit=crop&w=600&q=80",
     image: "https://tse4.mm.bing.net/th/id/OIP.e72F1lheQKDZUvUEhGN87gHaFj?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
-    description: "Cultura herbácea de ciclo contínuo, aprecia solos ricos e úmidos, porém sensível ao abafamento por calor e excesso de água acumulada.",
+    description: "Cultura herbácea de ciclo contínuo, aprecia solos ricos e úmidos, porém extremamente sensível ao abafamento por calor e excesso de água acumulada.",
     metrics: {
       humidity: {
         value: 78,
         unit: "%",
-        status: "Ideal a Alta",
-        level: "success",
-        optimalRange: "70% - 85%",
+        status: "Atenção: Alta",
+        level: "warning",
+        optimalRange: "60% - 75%",
         icon: "bi-droplet-half"
       },
       temperature: {
@@ -263,7 +263,7 @@ export const mockPlants = [
         unit: "°C",
         status: "Perfeita",
         level: "success",
-        optimalRange: "15°C - 24°C",
+        optimalRange: "10°C - 24°C",
         icon: "bi-thermometer-half"
       },
       rain: {
@@ -287,11 +287,11 @@ export const mockPlants = [
       {
         id: "risco-umidade-excessiva",
         name: "Risco de Humidade Excessiva",
-        status: "Moderado",
+        status: "Moderado / Alerta",
         level: "warning",
-        badge: "Risco de Míldio/Oídio",
+        badge: "Risco de Podridão e Míldio",
         value: "78% UR + 38mm chuva",
-        description: "Folhas molhadas por períodos prolongados favorecem manchas foliares (Septoria) e míldio.",
+        description: "Alta umidade (acima de 75%) e acúmulo de água favorecem fungos de solo (Pythium/Rhizoctonia) e manchas foliares (Septoria).",
         icon: "bi-droplet-fill"
       },
       {
@@ -301,20 +301,20 @@ export const mockPlants = [
         level: "success",
         badge: "Clima Ameno Adequado",
         value: "23.4°C (Máx segura)",
-        description: "A temperatura atual está dentro da faixa confortável. Risco de queima apenas se superar 28°C.",
+        description: "A temperatura atual está dentro da faixa confortável (10°C a 24°C). Risco de retardo vegetativo caso supere 28°C.",
         icon: "bi-thermometer"
       }
     ],
     recommendations: [
-      "Garantir escoamento adequado das calhas para evitar encharcamento no canteiro.",
-      "Realizar raleio e desbaste foliar preventivo para melhorar a aeração entre ramos.",
-      "Evitar irrigação foliar no período noturno."
+      "Garantir drenagem eficiente dos canteiros para prevenir encharcamento e podridões radiculares.",
+      "Realizar desbaste foliar preventivo e manter aeração constante para diminuir a umidade estagnada.",
+      "Evitar irrigação foliar no período noturno para reduzir incidência de míldio e septoriose."
     ],
     idealConditions: {
-      temp: "15°C - 24°C",
-      humidity: "70% - 85%",
+      temp: "10°C - 24°C (temperaturas > 28°C reduzem o vigor)",
+      humidity: "60% - 75%",
       light: "Meia-sombra a sol moderado",
-      soilMoisture: "Solo fértil, úmido sem empoçamento"
+      soilMoisture: "Solo úmido com boa capacidade de campo, estritamente sem encharcamento"
     }
   }
 ];
