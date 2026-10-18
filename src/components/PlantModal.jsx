@@ -47,10 +47,6 @@ export default function PlantModal({ plant, onClose }) {
                     <li><strong>Manejo Hídrico:</strong> {plant.idealConditions.soilMoisture}</li>
                   </ul>
                 </div>
-
-                <div className="badge bg-secondary-subtle text-secondary w-100 p-2 text-wrap">
-                  <i className="bi bi-geo-alt-fill text-danger me-1"></i> {plant.greenhouse}
-                </div>
               </div>
 
               {/* Coluna da Direita: Recomendações e Plano de Ação */}

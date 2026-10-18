@@ -42,7 +42,7 @@ export default function RiskAlertsBanner({ risks }) {
                 Matriz de Riscos Climáticos Gerais
               </h3>
               <p className="text-muted small mb-0">
-                Monitoramento contínuo para prevenção de perdas nas estufas e canteiros
+                Condições meteorológicas externas de referência para prevenção de perdas no viveiro
               </p>
             </div>
           </div>

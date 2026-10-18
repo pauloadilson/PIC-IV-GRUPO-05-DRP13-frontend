@@ -11,13 +11,13 @@ export default function HomeView({ weather, plants, onSelectPlant, onNavigateToP
         <div className="position-relative z-1">
           <div className="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill bg-white bg-opacity-20 backdrop-blur small fw-semibold mb-3">
             <span className="spinner-grow spinner-grow-sm text-warning" role="status"></span>
-            <span>Painel Operacional das Estufas & Culturas</span>
+            <span>Condições Meteorológicas Externas de Referência</span>
           </div>
           <h1 className="display-6 fw-bold mb-2">
             Bem-vindo ao Viveiro Bioterra
           </h1>
           <p className="lead fs-6 text-white-50 mb-4 max-w-xl">
-            Solução tecnológica para mitigação de riscos climáticos e otimização do cultivo protegido de <strong>Alface Solaris</strong>, <strong>Salsinha</strong> e <strong>Rosa do Deserto</strong>.
+            Monitoramento de condições meteorológicas externas de referência para apoio ao manejo de <strong>Alface Solaris</strong>, <strong>Salsinha</strong> e <strong>Rosa do Deserto</strong>.
           </p>
           <div className="d-flex flex-wrap gap-2">
             <button
@@ -115,7 +115,7 @@ export default function HomeView({ weather, plants, onSelectPlant, onNavigateToP
         </div>
       </div>
 
-      {/* 4. Previsão HG Brasil (5 Dias) */}
+      {/* 4. Previsão HG Brasil (3 Dias) */}
       <ForecastWidget forecast={weather.forecast} />
     </div>
   );

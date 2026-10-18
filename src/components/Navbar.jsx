@@ -12,7 +12,7 @@ export default function Navbar({ activeTab, setActiveTab, onRefresh, isRefreshin
             </span>
             <span className="text-secondary d-none d-md-inline">|</span>
             <span className="text-white-50 d-none d-md-inline">
-              <i className="bi bi-geo-alt me-1 text-success"></i> Estufa Central - Viveiro Bioterra
+              <i className="bi bi-geo-alt me-1 text-success"></i> Álvares Machado/SP &bull; Condições Externas de Referência
             </span>
           </div>
           <div className="d-flex align-items-center gap-2 text-white-50">

@@ -28,7 +28,7 @@ export default function Footer() {
                   Bootstrap 5.3
                 </span>
                 <span className="badge bg-success-subtle text-success border border-success-subtle">
-                  BFF INMET & HG Brasil
+                  Fonte: HG Brasil
                 </span>
               </div>
               <span className="small text-muted">

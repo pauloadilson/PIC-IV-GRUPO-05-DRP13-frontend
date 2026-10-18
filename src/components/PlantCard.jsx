@@ -40,10 +40,7 @@ export default function PlantCard({ plant, onSelectPlant }) {
           style={{ height: '170px' }}
         />
         <div className="position-absolute top-0 start-0 w-100 h-100 plant-gradient-overlay d-flex flex-column justify-content-between p-3 text-white">
-          <div className="d-flex justify-content-between align-items-start">
-            <span className="badge bg-dark bg-opacity-75 backdrop-blur px-2.5 py-1.5 rounded-pill small">
-              <i className="bi bi-geo-fill me-1 text-success"></i> {plant.greenhouse}
-            </span>
+          <div className="d-flex justify-content-end align-items-start">
             <span className={`badge rounded-pill px-3 py-1.5 fw-semibold shadow-sm ${getStatusBadge(plant.badgeLevel)}`}>
               {plant.badge}
             </span>
@@ -72,9 +69,9 @@ export default function PlantCard({ plant, onSelectPlant }) {
         <div className="mb-3">
           <div className="d-flex align-items-center justify-content-between mb-2">
             <h4 className="h6 fw-bold text-dark text-uppercase tracking-wider small mb-0">
-              <i className="bi bi-thermometer-sun me-1 text-primary"></i> Dados Climáticos da Cultura
+              <i className="bi bi-thermometer-sun me-1 text-primary"></i> Condições Externas de Referência
             </h4>
-            <span className="badge bg-light text-muted border small">Tempo Real</span>
+            <span className="badge bg-light text-muted border small">HG Brasil</span>
           </div>
 
           <div className="row g-2">

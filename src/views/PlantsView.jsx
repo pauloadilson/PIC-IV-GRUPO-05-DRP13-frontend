@@ -30,7 +30,7 @@ export default function PlantsView({ plants, onSelectPlant }) {
                     Painel Individual de Culturas
                   </h1>
                   <p className="text-muted small mb-0">
-                    Monitoramento microclimático dedicado para prevenção de perdas e manejo agronômico
+                    Parâmetros agronômicos avaliados frente às condições meteorológicas externas de referência
                   </p>
                 </div>
               </div>

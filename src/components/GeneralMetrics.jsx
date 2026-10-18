@@ -12,7 +12,7 @@ export default function GeneralMetrics({ weather }) {
               <i className="bi bi-clock-history me-1"></i> Atualizado às {weather.lastUpdated}
             </div>
             <h2 className="h4 fw-bold text-dark mb-1">
-              Clima em Tempo Real nas Estufas
+              Clima em Tempo Real em Álvares Machado/SP
             </h2>
             <p className="text-muted small mb-0">
               <i className="bi bi-pin-map-fill text-danger me-1"></i> {weather.location} &bull; Fonte: {weather.station}
@@ -44,8 +44,8 @@ export default function GeneralMetrics({ weather }) {
               </div>
               <div className="fs-3 fw-bold text-dark">{current.humidity}%</div>
               <div className="small text-muted mt-1">
-                <span className="badge bg-primary text-white me-1">Moderada</span>
-                Normal para estufas
+                <span className="badge bg-primary text-white me-1">Referência</span>
+                Condição externa atual
               </div>
             </div>
           </div>
