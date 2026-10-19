@@ -6,6 +6,7 @@ const VERCEL_BACKEND_URLS = (import.meta.env.VITE_VERCEL_BACKEND_URLS || '')
   .map((url) => url.trim().replace(/\/$/, ''))
   .filter(Boolean);
 const LOCAL_BACKEND_URL = (import.meta.env.VITE_LOCAL_BACKEND_URL || '').trim().replace(/\/$/, '');
+const BACKEND_API_KEY = (import.meta.env.VITE_BACKEND_API_KEY || '').trim();
 
 /**
  * Monta a lista de URLs do Backend a partir das variáveis de ambiente (.env / Vercel),
@@ -34,10 +35,11 @@ function getCandidateBackendUrls() {
 
 /**
  * Busca dados dinâmicos do dashboard a partir da API do Backend configurada nas variáveis de ambiente.
- * Implementa resiliência total com fallback automático para mockData.js caso nenhuma URL esteja definida ou acessível.
+ * Envia o cabeçalho X-API-Key quando VITE_BACKEND_API_KEY estiver configurado.
  */
 export async function fetchDashboardData() {
   const candidates = getCandidateBackendUrls();
+  const headers = BACKEND_API_KEY ? { 'X-API-Key': BACKEND_API_KEY } : {};
 
   for (const baseUrl of candidates) {
     try {
@@ -45,6 +47,7 @@ export async function fetchDashboardData() {
       const timeoutId = setTimeout(() => controller.abort(), 4500);
 
       const response = await fetch(`${baseUrl}/api/weather/dashboard`, {
+        headers,
         signal: controller.signal
       });
       clearTimeout(timeoutId);

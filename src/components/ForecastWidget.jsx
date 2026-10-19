@@ -11,7 +11,7 @@ export default function ForecastWidget({ forecast }) {
             </div>
             <div>
               <h3 className="h5 fw-bold mb-0 text-dark">
-                Previsão Meteorológica Estendida (3 Dias)
+                Previsão Meteorológica Estendida (5 Dias)
               </h3>
               <p className="text-muted small mb-0">
                 Projeção integrada HG Brasil para planejamento de irrigação e ventilação

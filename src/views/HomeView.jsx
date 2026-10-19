@@ -115,7 +115,7 @@ export default function HomeView({ weather, plants, onSelectPlant, onNavigateToP
         </div>
       </div>
 
-      {/* 4. Previsão HG Brasil (3 Dias) */}
+      {/* 4. Previsão HG Brasil (5 Dias) */}
       <ForecastWidget forecast={weather.forecast} />
     </div>
   );

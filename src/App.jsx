@@ -27,6 +27,14 @@ export default function App() {
 
   useEffect(() => {
     loadData();
+
+    // Atualiza automaticamente a tela a cada 60 minutos (alinhado ao max_idade_minutos da API)
+    const AUTO_REFRESH_MS = 60 * 60 * 1000;
+    const intervalId = setInterval(() => {
+      loadData();
+    }, AUTO_REFRESH_MS);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   const handleRefresh = () => {
