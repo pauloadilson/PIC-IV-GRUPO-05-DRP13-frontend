@@ -64,7 +64,119 @@ export const mockGeneralWeather = {
     { day: "Hoje", weekday: "Seg", max: 31, min: 18, rainProb: 60, rainMm: 4.5, icon: "bi-cloud-sun", cond: "Sol e pancadas à tarde" },
     { day: "Amanhã", weekday: "Ter", max: 28, min: 19, rainProb: 85, rainMm: 22.0, icon: "bi-cloud-rain", cond: "Chuva moderada" },
     { day: "Quarta", weekday: "Qua", max: 25, min: 17, rainProb: 70, rainMm: 15.5, icon: "bi-cloud-drizzle", cond: "Pancadas isoladas" },
-  ]
+  ],
+  // Previsão Horária de Aprendizado de Máquina (24h — HistGradientBoostingRegressor TU)
+  mlForecast: {
+    status: "success",
+    is_simulated_fallback: true,
+    model: {
+      id: "hgb_tu_24h",
+      version: "1.0.0",
+      algorithm: "HistGradientBoostingRegressor",
+      feature_set: "TU",
+      history_hours: 24,
+      forecast_hours: 24,
+      targets: ["temperature_c", "humidity_pct"]
+    },
+    forecast: Array.from({ length: 24 }, (_, idx) => {
+      const h = idx + 1;
+      const refTime = new Date(Date.now() + h * 3600000);
+      const hour = refTime.getHours();
+      const wave = Math.sin(((hour - 9) / 24) * 2 * Math.PI);
+      const temperature_c = Number((25.0 + 4.8 * wave).toFixed(1));
+      const humidity_pct = Number(Math.max(38, Math.min(92, 68.0 - 15.0 * wave)).toFixed(1));
+      return {
+        horizon_hours: h,
+        timestamp: refTime.toISOString(),
+        temperature_c,
+        humidity_pct
+      };
+    }),
+    summary: {
+      temperature: {
+        minimum_c: 20.2,
+        maximum_c: 29.8,
+        mean_c: 25.0,
+        minimum_at: new Date(Date.now() + 14 * 3600000).toISOString(),
+        maximum_at: new Date(Date.now() + 3 * 3600000).toISOString(),
+        configured_threshold_c: 30.0,
+        hours_above_configured_threshold: 0,
+        longest_sequence_above_threshold: 0,
+        first_event_above_threshold_at: null
+      },
+      humidity: {
+        minimum_pct: 53.0,
+        maximum_pct: 83.0,
+        mean_pct: 68.0,
+        minimum_at: new Date(Date.now() + 3 * 3600000).toISOString(),
+        maximum_at: new Date(Date.now() + 14 * 3600000).toISOString(),
+        configured_threshold_pct: 75.0,
+        hours_above_configured_threshold: 8,
+        longest_sequence_above_threshold: 8,
+        first_event_above_threshold_at: new Date(Date.now() + 10 * 3600000).toISOString()
+      },
+      thresholds_by_context: {
+        geral_viveiro: {
+          temperature_above_30c: { threshold: 30.0, direction: "above", hours_count: 0, longest_sequence_hours: 0, first_event_at: null, peak_value: 29.8 },
+          humidity_above_75pct: { threshold: 75.0, direction: "above", hours_count: 8, longest_sequence_hours: 8, first_event_at: new Date(Date.now() + 10 * 3600000).toISOString(), peak_value: 83.0 }
+        },
+        alface_solaris: {
+          temperature_above_26c: { threshold: 26.0, direction: "above", hours_count: 9, longest_sequence_hours: 9, first_event_at: new Date(Date.now() + 1 * 3600000).toISOString(), peak_value: 29.8 },
+          temperature_above_28c: { threshold: 28.0, direction: "above", hours_count: 5, longest_sequence_hours: 5, first_event_at: new Date(Date.now() + 2 * 3600000).toISOString(), peak_value: 29.8 },
+          humidity_above_80pct: { threshold: 80.0, direction: "above", hours_count: 4, longest_sequence_hours: 4, first_event_at: new Date(Date.now() + 12 * 3600000).toISOString(), peak_value: 83.0 }
+        },
+        rosa_do_deserto: {
+          humidity_above_60pct: { threshold: 60.0, direction: "above", hours_count: 16, longest_sequence_hours: 14, first_event_at: new Date(Date.now() + 7 * 3600000).toISOString(), peak_value: 83.0 },
+          temperature_below_14c: { threshold: 14.0, direction: "below", hours_count: 0, longest_sequence_hours: 0, first_event_at: null, peak_value: 20.2 }
+        },
+        salsinha: {
+          humidity_above_75pct: { threshold: 75.0, direction: "above", hours_count: 8, longest_sequence_hours: 8, first_event_at: new Date(Date.now() + 10 * 3600000).toISOString(), peak_value: 83.0 },
+          temperature_above_24c: { threshold: 24.0, direction: "above", hours_count: 12, longest_sequence_hours: 10, first_event_at: new Date(Date.now() + 1 * 3600000).toISOString(), peak_value: 29.8 },
+          temperature_above_28c: { threshold: 28.0, direction: "above", hours_count: 5, longest_sequence_hours: 5, first_event_at: new Date(Date.now() + 2 * 3600000).toISOString(), peak_value: 29.8 }
+        }
+      }
+    },
+    indicators: {
+      temperature_trend: "stable",
+      humidity_trend: "rising",
+      temperature_amplitude_c: 9.6,
+      combined_heat_humidity_periods: []
+    },
+    alerts: [
+      {
+        code: "ALFACE_THERMAL_STRESS_26C",
+        context: "alface_solaris",
+        severity: "warning",
+        metric: "temperature_c",
+        threshold: 26.0,
+        hours_above_threshold: 9,
+        longest_sequence_hours: 9,
+        first_event_at: new Date(Date.now() + 1 * 3600000).toISOString(),
+        message: "Alface Solaris: 9h previstas acima de 26°C (maior sequência: 9h). Atenção a tipburn e ventilação."
+      },
+      {
+        code: "ROSA_EXCESS_HUMIDITY_60PCT",
+        context: "rosa_do_deserto",
+        severity: "warning",
+        metric: "humidity_pct",
+        threshold: 60.0,
+        hours_above_threshold: 16,
+        longest_sequence_hours: 14,
+        first_event_at: new Date(Date.now() + 7 * 3600000).toISOString(),
+        message: "Rosa do Deserto: 16h previstas com umidade > 60% (maior sequência: 14h). Suspender regas e reforçar aeração."
+      }
+    ],
+    warnings: [
+      {
+        code: "EXTERNAL_REFERENCE_CONDITIONS",
+        message: "A previsão representa condições meteorológicas externas de referência para o viveiro."
+      },
+      {
+        code: "SOURCE_DOMAIN_SHIFT",
+        message: "O modelo foi treinado com dados históricos do INMET e recebe, na operação, observações coletadas da HG Brasil."
+      }
+    ]
+  }
 };
 
 // Culturas foco: Alface Solaris, Salsinha e Rosa do Deserto
@@ -110,6 +222,26 @@ export const mockPlants = [
         rainProb: "60%",
         icon: "bi-cloud-sun"
       }
+    },
+    mlPrediction: {
+      contextKey: "alface_solaris",
+      status: "success",
+      isSimulatedFallback: true,
+      summaryTemperature: { minimum_c: 20.2, maximum_c: 29.8, mean_c: 25.0 },
+      summaryHumidity: { minimum_pct: 53.0, maximum_pct: 83.0, mean_pct: 68.0 },
+      indicators: { temperature_trend: "stable", humidity_trend: "rising", temperature_amplitude_c: 9.6 },
+      thresholds: {
+        temperature_above_26c: { threshold: 26.0, direction: "above", hours_count: 9, longest_sequence_hours: 9, first_event_at: new Date(Date.now() + 1 * 3600000).toISOString(), peak_value: 29.8 },
+        temperature_above_28c: { threshold: 28.0, direction: "above", hours_count: 5, longest_sequence_hours: 5, first_event_at: new Date(Date.now() + 2 * 3600000).toISOString(), peak_value: 29.8 },
+        humidity_above_80pct: { threshold: 80.0, direction: "above", hours_count: 4, longest_sequence_hours: 4, first_event_at: new Date(Date.now() + 12 * 3600000).toISOString(), peak_value: 83.0 }
+      },
+      alerts: [
+        {
+          code: "ALFACE_THERMAL_STRESS_26C",
+          severity: "warning",
+          message: "Alface Solaris: 9h previstas acima de 26°C (maior sequência: 9h). Atenção a tipburn e ventilação."
+        }
+      ]
     },
     risks: [
       {
@@ -197,6 +329,25 @@ export const mockPlants = [
         icon: "bi-sun"
       }
     },
+    mlPrediction: {
+      contextKey: "rosa_do_deserto",
+      status: "success",
+      isSimulatedFallback: true,
+      summaryTemperature: { minimum_c: 20.2, maximum_c: 29.8, mean_c: 25.0 },
+      summaryHumidity: { minimum_pct: 53.0, maximum_pct: 83.0, mean_pct: 68.0 },
+      indicators: { temperature_trend: "stable", humidity_trend: "rising", temperature_amplitude_c: 9.6 },
+      thresholds: {
+        humidity_above_60pct: { threshold: 60.0, direction: "above", hours_count: 16, longest_sequence_hours: 14, first_event_at: new Date(Date.now() + 7 * 3600000).toISOString(), peak_value: 83.0 },
+        temperature_below_14c: { threshold: 14.0, direction: "below", hours_count: 0, longest_sequence_hours: 0, first_event_at: null, peak_value: 20.2 }
+      },
+      alerts: [
+        {
+          code: "ROSA_EXCESS_HUMIDITY_60PCT",
+          severity: "warning",
+          message: "Rosa do Deserto: 16h previstas com umidade > 60% (maior sequência: 14h). Suspender regas e reforçar aeração."
+        }
+      ]
+    },
     risks: [
       {
         id: "risco-umidade-excessiva",
@@ -272,6 +423,20 @@ export const mockPlants = [
         rainProb: "75%",
         icon: "bi-cloud-drizzle"
       }
+    },
+    mlPrediction: {
+      contextKey: "salsinha",
+      status: "success",
+      isSimulatedFallback: true,
+      summaryTemperature: { minimum_c: 20.2, maximum_c: 29.8, mean_c: 25.0 },
+      summaryHumidity: { minimum_pct: 53.0, maximum_pct: 83.0, mean_pct: 68.0 },
+      indicators: { temperature_trend: "stable", humidity_trend: "rising", temperature_amplitude_c: 9.6 },
+      thresholds: {
+        humidity_above_75pct: { threshold: 75.0, direction: "above", hours_count: 8, longest_sequence_hours: 8, first_event_at: new Date(Date.now() + 10 * 3600000).toISOString(), peak_value: 83.0 },
+        temperature_above_24c: { threshold: 24.0, direction: "above", hours_count: 12, longest_sequence_hours: 10, first_event_at: new Date(Date.now() + 1 * 3600000).toISOString(), peak_value: 29.8 },
+        temperature_above_28c: { threshold: 28.0, direction: "above", hours_count: 5, longest_sequence_hours: 5, first_event_at: new Date(Date.now() + 2 * 3600000).toISOString(), peak_value: 29.8 }
+      },
+      alerts: []
     },
     risks: [
       {

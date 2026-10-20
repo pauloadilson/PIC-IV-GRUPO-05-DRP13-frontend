@@ -1,6 +1,7 @@
 import React from 'react';
 import GeneralMetrics from '../components/GeneralMetrics';
 import RiskAlertsBanner from '../components/RiskAlertsBanner';
+import MlForecastSection from '../components/MlForecastSection';
 import ForecastWidget from '../components/ForecastWidget';
 
 export default function HomeView({ weather, plants, onSelectPlant, onNavigateToPlants }) {
@@ -28,6 +29,17 @@ export default function HomeView({ weather, plants, onSelectPlant, onNavigateToP
               Ver Monitoramento das Plantas
             </button>
             <a
+              href="#secao-previsao-ml"
+              className="btn btn-light text-forest fw-semibold px-4 py-2 rounded-pill shadow-sm"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('secao-previsao-ml')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              <i className="bi bi-cpu-fill me-2"></i>
+              Previsão ML (24h)
+            </a>
+            <a
               href="#riscos"
               className="btn btn-outline-light px-4 py-2 rounded-pill"
               onClick={(e) => {
@@ -45,12 +57,15 @@ export default function HomeView({ weather, plants, onSelectPlant, onNavigateToP
       {/* 1. Métricas Climáticas em Tempo Real */}
       <GeneralMetrics weather={weather} />
 
-      {/* 2. Banner de Riscos Climáticos Gerais (Granizo, Calor, Precipitação, Vento) */}
+      {/* 2. Previsão Horária de Aprendizado de Máquina (24h — HistGradientBoostingRegressor TU) */}
+      <MlForecastSection mlForecast={weather.mlForecast} />
+
+      {/* 3. Banner de Riscos Climáticos Gerais (Granizo, Calor, Precipitação, Vento) */}
       <div id="secao-riscos">
         <RiskAlertsBanner risks={weather.generalRisks} />
       </div>
 
-      {/* 3. Atalho Rápido para as Culturas Monitoradas */}
+      {/* 4. Atalho Rápido para as Culturas Monitoradas */}
       <div className="card shadow-sm border-0 rounded-4 mb-4 bg-white">
         <div className="card-body p-4">
           <div className="d-flex flex-wrap justify-content-between align-items-center mb-3">
@@ -115,7 +130,7 @@ export default function HomeView({ weather, plants, onSelectPlant, onNavigateToP
         </div>
       </div>
 
-      {/* 4. Previsão HG Brasil (5 Dias) */}
+      {/* 5. Previsão HG Brasil (5 Dias) */}
       <ForecastWidget forecast={weather.forecast} />
     </div>
   );

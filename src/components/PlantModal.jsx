@@ -47,6 +47,27 @@ export default function PlantModal({ plant, onClose }) {
                     <li><strong>Manejo Hídrico:</strong> {plant.idealConditions.soilMoisture}</li>
                   </ul>
                 </div>
+
+                {plant.mlPrediction && plant.mlPrediction.summaryTemperature && (
+                  <div className="p-3 bg-primary-subtle bg-opacity-25 rounded-4 border border-primary border-opacity-25">
+                    <h6 className="fw-bold text-primary-emphasis mb-2 small text-uppercase">
+                      <i className="bi bi-cpu-fill me-1 text-primary"></i> Resumo Preditivo ML (24h)
+                    </h6>
+                    <div className="small text-secondary d-flex flex-column gap-1.5">
+                      <div>
+                        <strong>Temp. 24h:</strong> {plant.mlPrediction.summaryTemperature.minimum_c}°C a {plant.mlPrediction.summaryTemperature.maximum_c}°C (média {plant.mlPrediction.summaryTemperature.mean_c}°C)
+                      </div>
+                      <div>
+                        <strong>Umidade 24h:</strong> {plant.mlPrediction.summaryHumidity?.minimum_pct}% a {plant.mlPrediction.summaryHumidity?.maximum_pct}% (média {plant.mlPrediction.summaryHumidity?.mean_pct}%)
+                      </div>
+                      {plant.mlPrediction.indicators && (
+                        <div>
+                          <strong>Amplitude Térmica:</strong> {plant.mlPrediction.indicators.temperature_amplitude_c}°C
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Coluna da Direita: Recomendações e Plano de Ação */}
@@ -62,6 +83,22 @@ export default function PlantModal({ plant, onClose }) {
                     </div>
                   ))}
                 </div>
+
+                {plant.mlPrediction?.alerts?.length > 0 && (
+                  <div className="mb-3">
+                    <h6 className="fw-bold text-dark mb-2 text-uppercase small">
+                      <i className="bi bi-bell-fill me-1 text-warning"></i> Alertas Preditivos do Modelo ML (24h)
+                    </h6>
+                    <div className="d-flex flex-column gap-2">
+                      {plant.mlPrediction.alerts.map((al, i) => (
+                        <div key={i} className="p-2.5 rounded-3 bg-warning-subtle border border-warning small text-warning-emphasis">
+                          <i className="bi bi-exclamation-triangle-fill me-1.5"></i>
+                          <strong>{al.message}</strong>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 <h6 className="fw-bold text-dark mb-2 text-uppercase small">
                   <i className="bi bi-shield-exclamation me-1 text-danger"></i> Resumo de Riscos Críticos
