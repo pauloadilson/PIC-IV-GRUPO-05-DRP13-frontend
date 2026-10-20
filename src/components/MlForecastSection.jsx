@@ -41,9 +41,306 @@ const THRESHOLD_LABELS = {
   temperature_above_24c: { label: 'Acima da Faixa Ideal (> 24°C)', unit: '°C', icon: 'bi-thermometer-half', color: 'warning' }
 };
 
+function HourlyLineChart({
+  title,
+  icon,
+  data,
+  valueKey,
+  unit,
+  strokeColor,
+  gradientId,
+  thresholdValue,
+  thresholdLabel,
+  clampPct = false
+}) {
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+
+  if (!data || data.length === 0) {
+    return null;
+  }
+
+  const width = 620;
+  const height = 240;
+  const padLeft = 46;
+  const padRight = 18;
+  const padTop = 24;
+  const padBottom = 46;
+  const plotWidth = width - padLeft - padRight;
+  const plotHeight = height - padTop - padBottom;
+
+  const values = data.map((d) => Number(d[valueKey]) || 0);
+  const rawMin = Math.min(...values);
+  const rawMax = Math.max(...values);
+  const spread = Math.max(rawMax - rawMin, 2);
+  const margin = Math.max(spread * 0.2, 1.5);
+
+  let yMin = Math.floor(rawMin - margin);
+  let yMax = Math.ceil(rawMax + margin);
+
+  if (clampPct) {
+    yMin = Math.max(0, yMin);
+    yMax = Math.min(100, Math.max(yMax, rawMax + 2));
+  }
+  if (yMax <= yMin) {
+    yMax = yMin + 4;
+  }
+
+  const getX = (idx) =>
+    padLeft + (data.length > 1 ? (idx / (data.length - 1)) * plotWidth : plotWidth / 2);
+  const getY = (val) =>
+    padTop + plotHeight - ((val - yMin) / (yMax - yMin)) * plotHeight;
+
+  const points = data.map((pt, idx) => {
+    const val = Number(pt[valueKey]) || 0;
+    return {
+      idx,
+      x: getX(idx),
+      y: getY(val),
+      val,
+      horizon: pt.horizon_hours,
+      hourLabel: formatHourFromIso(pt.timestamp),
+      isAboveThreshold: thresholdValue != null && val >= thresholdValue
+    };
+  });
+
+  const linePath = points
+    .map((p, idx) => `${idx === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`)
+    .join(' ');
+
+  const areaPath = `${linePath} L ${points[points.length - 1].x.toFixed(1)} ${(padTop + plotHeight).toFixed(1)} L ${points[0].x.toFixed(1)} ${(padTop + plotHeight).toFixed(1)} Z`;
+
+  const yTicks = Array.from({ length: 5 }, (_, i) => {
+    const val = yMin + ((yMax - yMin) * i) / 4;
+    return {
+      val: Number(val.toFixed(1)),
+      y: getY(val)
+    };
+  });
+
+  const showThresholdLine =
+    thresholdValue != null && thresholdValue >= yMin && thresholdValue <= yMax;
+  const thresholdY = showThresholdLine ? getY(thresholdValue) : null;
+
+  const activePoint = hoveredIndex != null ? points[hoveredIndex] : null;
+
+  return (
+    <div className="p-3 rounded-4 border bg-light h-100 d-flex flex-column justify-content-between">
+      <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+        <div className="d-flex align-items-center gap-2">
+          <i className={`bi ${icon} fs-5`}></i>
+          <div>
+            <h5 className="h6 fw-bold text-dark mb-0">{title}</h5>
+            <span className="text-muted" style={{ fontSize: '0.75rem' }}>
+              Eixo X: Horário previsto (t+1h a t+24h)
+            </span>
+          </div>
+        </div>
+
+        {activePoint ? (
+          <span className="badge bg-white text-dark border shadow-sm px-2.5 py-1.5">
+            <span className="text-secondary me-1">
+              {activePoint.hourLabel} (+{activePoint.horizon}h):
+            </span>
+            <strong style={{ color: strokeColor }}>
+              {activePoint.val}
+              {unit}
+            </strong>
+          </span>
+        ) : (
+          <span className="badge bg-white text-secondary border px-2.5 py-1.5" style={{ fontSize: '0.72rem' }}>
+            Mín: <strong>{rawMin}{unit}</strong> &bull; Máx: <strong>{rawMax}{unit}</strong>
+          </span>
+        )}
+      </div>
+
+      <div className="w-100 overflow-x-auto">
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          className="w-100 h-auto d-block"
+          style={{ minWidth: '460px' }}
+          role="img"
+          aria-label={`${title} de t+1h a t+24h`}
+          onMouseLeave={() => setHoveredIndex(null)}
+        >
+          <title>{`${title} (t+1h a t+24h)`}</title>
+          <defs>
+            <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={strokeColor} stopOpacity="0.28" />
+              <stop offset="100%" stopColor={strokeColor} stopOpacity="0.02" />
+            </linearGradient>
+          </defs>
+
+          {/* Grade Horizontal e Eixo Y */}
+          {yTicks.map((t, i) => (
+            <g key={i}>
+              <line
+                x1={padLeft}
+                y1={t.y}
+                x2={width - padRight}
+                y2={t.y}
+                stroke="#dee2e6"
+                strokeDasharray={i === 0 ? undefined : '3 3'}
+                strokeWidth="1"
+              />
+              <text
+                x={padLeft - 6}
+                y={t.y + 3}
+                textAnchor="end"
+                fill="#6c757d"
+                fontSize="10"
+              >
+                { `${t.val}${unit}` }
+              </text>
+            </g>
+          ))}
+
+          {/* Linha de Limiar Configurado (quando estiver na escala visível) */}
+          {showThresholdLine && (
+            <g>
+              <line
+                x1={padLeft}
+                y1={thresholdY}
+                x2={width - padRight}
+                y2={thresholdY}
+                stroke="#dc3545"
+                strokeDasharray="5 4"
+                strokeWidth="1.2"
+                opacity="0.75"
+              />
+              <text
+                x={width - padRight - 4}
+                y={thresholdY - 4}
+                textAnchor="end"
+                fill="#dc3545"
+                fontSize="9.5"
+                fontWeight="600"
+              >
+                {thresholdLabel}
+              </text>
+            </g>
+          )}
+
+          {/* Área sob a curva e Linha Principal */}
+          <path d={areaPath} fill={`url(#${gradientId})`} />
+          <path
+            d={linePath}
+            fill="none"
+            stroke={strokeColor}
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          {/* Guia Vertical ao Passar o Mouse */}
+          {activePoint && (
+            <line
+              x1={activePoint.x}
+              y1={padTop}
+              x2={activePoint.x}
+              y2={padTop + plotHeight}
+              stroke={strokeColor}
+              strokeWidth="1"
+              strokeDasharray="3 3"
+              opacity="0.6"
+            />
+          )}
+
+          {/* Rótulos do Eixo X (Horas) */}
+          {points.map((p, idx) => {
+            const showLabel = idx % 2 === 0 || idx === points.length - 1;
+            return (
+              <g key={p.horizon}>
+                <line
+                  x1={p.x}
+                  y1={padTop + plotHeight}
+                  x2={p.x}
+                  y2={padTop + plotHeight + (showLabel ? 5 : 3)}
+                  stroke="#adb5bd"
+                  strokeWidth="1"
+                />
+                {showLabel && (
+                  <>
+                    <text
+                      x={p.x}
+                      y={padTop + plotHeight + 16}
+                      textAnchor="middle"
+                      fill="#495057"
+                      fontSize="9.5"
+                      fontWeight="600"
+                    >
+                      {p.hourLabel}
+                    </text>
+                    <text
+                      x={p.x}
+                      y={padTop + plotHeight + 28}
+                      textAnchor="middle"
+                      fill="#868e96"
+                      fontSize="8.5"
+                    >
+                      +{p.horizon}h
+                    </text>
+                  </>
+                )}
+              </g>
+            );
+          })}
+
+          {/* Pontos Horários e Áreas de Toque/Hover */}
+          {points.map((p, idx) => {
+            const isHovered = hoveredIndex === idx;
+            return (
+              <g key={p.horizon}>
+                <circle
+                  cx={p.x}
+                  cy={p.y}
+                  r={isHovered ? 5.5 : p.isAboveThreshold ? 3.8 : 3}
+                  fill={isHovered ? '#ffffff' : strokeColor}
+                  stroke={strokeColor}
+                  strokeWidth={isHovered ? 2.5 : 1.5}
+                />
+                {isHovered && (
+                  <g>
+                    <rect
+                      x={Math.min(Math.max(p.x - 30, padLeft), width - padRight - 60)}
+                      y={Math.max(p.y - 26, 2)}
+                      width="60"
+                      height="18"
+                      rx="4"
+                      fill="#212529"
+                      opacity="0.9"
+                    />
+                    <text
+                      x={Math.min(Math.max(p.x, padLeft + 30), width - padRight - 30)}
+                      y={Math.max(p.y - 14, 14)}
+                      textAnchor="middle"
+                      fill="#ffffff"
+                      fontSize="9.5"
+                      fontWeight="700"
+                    >
+                      {`${p.val}${unit}`}
+                    </text>
+                  </g>
+                )}
+                <circle
+                  cx={p.x}
+                  cy={p.y}
+                  r="11"
+                  fill="transparent"
+                  style={{ cursor: 'pointer' }}
+                  onMouseEnter={() => setHoveredIndex(idx)}
+                  onFocus={() => setHoveredIndex(idx)}
+                />
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+    </div>
+  );
+}
+
 export default function MlForecastSection({ mlForecast }) {
   const [selectedContext, setSelectedContext] = useState('geral_viveiro');
-  const [showAllHours, setShowAllHours] = useState(false);
 
   if (!mlForecast || !mlForecast.summary) {
     return null;
@@ -66,8 +363,6 @@ export default function MlForecastSection({ mlForecast }) {
 
   const tempTrend = formatTrendLabel(indicators.temperature_trend);
   const humTrend = formatTrendLabel(indicators.humidity_trend);
-
-  const displayedHours = showAllHours ? forecast : forecast.filter((_, idx) => idx % 2 === 0 || idx === 23);
 
   return (
     <div className="card shadow-sm border-0 rounded-4 mb-4 bg-white" id="secao-previsao-ml">
@@ -315,43 +610,45 @@ export default function MlForecastSection({ mlForecast }) {
 
         {/* 4. Trajetória Horária Prevista (t+1 a t+24) */}
         <div className="mb-3">
-          <div className="d-flex justify-content-between align-items-center mb-2">
+          <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
             <h4 className="h6 fw-bold text-dark mb-0">
-              <i className="bi bi-clock-history text-primary me-1"></i>
+              <i className="bi bi-graph-up text-primary me-1"></i>
               Trajetória Horária Prevista (t+1h a t+24h)
             </h4>
-            <button
-              type="button"
-              className="btn btn-sm btn-link text-decoration-none p-0"
-              onClick={() => setShowAllHours(!showAllHours)}
-            >
-              {showAllHours ? 'Mostrar resumo (a cada 2h)' : 'Ver todas as 24 horas'}
-            </button>
+            <span className="small text-muted">
+              Passe o cursor sobre os pontos para inspecionar o valor exato de cada hora
+            </span>
           </div>
 
-          <div className="row g-2">
-            {displayedHours.map((pt) => {
-              const isHot = pt.temperature_c >= 28;
-              const isHumid = pt.humidity_pct >= 75;
-              return (
-                <div key={pt.horizon_hours} className="col-6 col-sm-4 col-md-3 col-lg-2">
-                  <div className="p-2 rounded-3 border bg-light text-center h-100">
-                    <div className="d-flex justify-content-between align-items-center small text-muted mb-1" style={{ fontSize: '0.72rem' }}>
-                      <span className="badge bg-white text-secondary border">+{pt.horizon_hours}h</span>
-                      <span className="fw-semibold">{formatHourFromIso(pt.timestamp)}</span>
-                    </div>
-                    <div className={`fw-bold ${isHot ? 'text-danger' : 'text-dark'}`} style={{ fontSize: '0.95rem' }}>
-                      <i className="bi bi-thermometer-half text-danger me-0.5"></i>
-                      {pt.temperature_c}°C
-                    </div>
-                    <div className={`small ${isHumid ? 'text-primary fw-semibold' : 'text-secondary'}`} style={{ fontSize: '0.8rem' }}>
-                      <i className="bi bi-droplet-fill text-info me-0.5"></i>
-                      {pt.humidity_pct}%
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+          <div className="row g-3">
+            <div className="col-12 col-lg-6">
+              <HourlyLineChart
+                title="Temperatura Prevista (°C)"
+                icon="bi-thermometer-half text-danger"
+                data={forecast}
+                valueKey="temperature_c"
+                unit="°C"
+                strokeColor="#dc3545"
+                gradientId="ml-temp-line-grad"
+                thresholdValue={tempSummary.configured_threshold_c ?? 30}
+                thresholdLabel={`Limiar ${tempSummary.configured_threshold_c ?? 30}°C`}
+              />
+            </div>
+
+            <div className="col-12 col-lg-6">
+              <HourlyLineChart
+                title="Umidade Relativa Prevista (%)"
+                icon="bi-droplet-fill text-primary"
+                data={forecast}
+                valueKey="humidity_pct"
+                unit="%"
+                strokeColor="#0d6efd"
+                gradientId="ml-hum-line-grad"
+                thresholdValue={humSummary.configured_threshold_pct ?? 75}
+                thresholdLabel={`Limiar ${humSummary.configured_threshold_pct ?? 75}%`}
+                clampPct
+              />
+            </div>
           </div>
         </div>
 
