@@ -23,24 +23,6 @@ function formatTrendLabel(trend) {
   }
 }
 
-const CONTEXT_OPTIONS = [
-  { key: 'geral_viveiro', label: 'Geral do Viveiro', icon: 'bi-house-gear' },
-  { key: 'alface_solaris', label: 'Alface Solaris', icon: 'bi-flower2' },
-  { key: 'rosa_do_deserto', label: 'Rosa do Deserto', icon: 'bi-sun' },
-  { key: 'salsinha', label: 'Salsinha', icon: 'bi-droplet-half' }
-];
-
-const THRESHOLD_LABELS = {
-  temperature_above_30c: { label: 'Calor Crítico (> 30°C)', unit: '°C', icon: 'bi-thermometer-sun', color: 'danger' },
-  humidity_above_75pct: { label: 'Umidade Elevada (> 75%)', unit: '%', icon: 'bi-droplet-fill', color: 'info' },
-  temperature_above_26c: { label: 'Stress Térmico Alface (> 26°C)', unit: '°C', icon: 'bi-thermometer-high', color: 'warning' },
-  temperature_above_28c: { label: 'Calor Severo (> 28°C)', unit: '°C', icon: 'bi-fire', color: 'danger' },
-  humidity_above_80pct: { label: 'Umidade Crítica (> 80%)', unit: '%', icon: 'bi-cloud-haze2', color: 'warning' },
-  humidity_above_60pct: { label: 'Umidade Acima do Ideal (> 60%)', unit: '%', icon: 'bi-moisture', color: 'warning' },
-  temperature_below_14c: { label: 'Frio Crítico (< 14°C)', unit: '°C', icon: 'bi-snow', color: 'info' },
-  temperature_above_24c: { label: 'Acima da Faixa Ideal (> 24°C)', unit: '°C', icon: 'bi-thermometer-half', color: 'warning' }
-};
-
 function HourlyLineChart({
   title,
   icon,
@@ -340,8 +322,6 @@ function HourlyLineChart({
 }
 
 export default function MlForecastSection({ mlForecast }) {
-  const [selectedContext, setSelectedContext] = useState('geral_viveiro');
-
   if (!mlForecast || !mlForecast.summary) {
     return null;
   }
@@ -358,8 +338,6 @@ export default function MlForecastSection({ mlForecast }) {
 
   const tempSummary = summary.temperature || {};
   const humSummary = summary.humidity || {};
-  const contexts = summary.thresholds_by_context || {};
-  const activeThresholds = contexts[selectedContext] || {};
 
   const tempTrend = formatTrendLabel(indicators.temperature_trend);
   const humTrend = formatTrendLabel(indicators.humidity_trend);
@@ -498,84 +476,7 @@ export default function MlForecastSection({ mlForecast }) {
           </div>
         </div>
 
-        {/* 2. Métricas de Limiar, Persistência e Horário Inicial por Cultura */}
-        <div className="p-3 rounded-4 bg-light-subtle border mb-4">
-          <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-            <div>
-              <h4 className="h6 fw-bold text-dark mb-0">
-                <i className="bi bi-sliders2-vertical text-primary me-1"></i>
-                Análise de Limiares Agronômicos, Persistência e Horário Inicial do Evento
-              </h4>
-              <span className="small text-muted">
-                Quantidade de horas previstas fora da faixa ideal, maior sequência contínua e instante de início
-              </span>
-            </div>
-
-            <div className="btn-group btn-group-sm flex-wrap" role="group" aria-label="Filtro de cultura ML">
-              {CONTEXT_OPTIONS.map((opt) => (
-                <button
-                  key={opt.key}
-                  type="button"
-                  className={`btn ${
-                    selectedContext === opt.key ? 'btn-primary fw-semibold' : 'btn-outline-secondary'
-                  }`}
-                  onClick={() => setSelectedContext(opt.key)}
-                >
-                  <i className={`bi ${opt.icon} me-1`}></i>
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="row g-2">
-            {Object.entries(activeThresholds).map(([ruleKey, item]) => {
-              const meta = THRESHOLD_LABELS[ruleKey] || {
-                label: ruleKey,
-                unit: '',
-                icon: 'bi-activity',
-                color: 'secondary'
-              };
-              const hasEvent = item.hours_count > 0;
-              return (
-                <div key={ruleKey} className="col-12 col-md-4">
-                  <div className={`p-3 rounded-3 border bg-white h-100 ${
-                    hasEvent ? `border-${meta.color} border-opacity-50` : ''
-                  }`}>
-                    <div className="d-flex justify-content-between align-items-center mb-2">
-                      <span className="fw-bold small text-dark">
-                        <i className={`bi ${meta.icon} text-${meta.color} me-1`}></i>
-                        {meta.label}
-                      </span>
-                      <span className={`badge rounded-pill ${
-                        hasEvent ? `bg-${meta.color} ${meta.color === 'warning' ? 'text-dark' : 'text-white'}` : 'bg-success-subtle text-success'
-                      }`}>
-                        {hasEvent ? `${item.hours_count}h previstas` : '0h (Confortável)'}
-                      </span>
-                    </div>
-
-                    <div className="row g-2 small text-secondary">
-                      <div className="col-4">
-                        <div className="text-muted" style={{ fontSize: '0.7rem' }}>Horas Acima/Abaixo</div>
-                        <div className="fw-semibold text-dark">{item.hours_count} h</div>
-                      </div>
-                      <div className="col-4">
-                        <div className="text-muted" style={{ fontSize: '0.7rem' }}>Maior Sequência</div>
-                        <div className="fw-semibold text-dark">{item.longest_sequence_hours} h seguidas</div>
-                      </div>
-                      <div className="col-4">
-                        <div className="text-muted" style={{ fontSize: '0.7rem' }}>Início do Evento</div>
-                        <div className="fw-semibold text-dark">{formatHourFromIso(item.first_event_at)}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* 3. Alertas Preditivos Gerados pelo Modelo de ML */}
+        {/* 2. Alertas Preditivos Gerados pelo Modelo de ML */}
         {alerts.length > 0 && (
           <div className="mb-4">
             <h4 className="h6 fw-bold text-dark mb-2">

@@ -56,16 +56,8 @@ export default function HomeView({ weather, plants, onSelectPlant, onNavigateToP
 
       {/* 1. Métricas Climáticas em Tempo Real */}
       <GeneralMetrics weather={weather} />
-
-      {/* 2. Banner de Riscos Climáticos Gerais (Granizo, Calor, Precipitação, Vento) */}
-      <div id="secao-riscos">
-        <RiskAlertsBanner risks={weather.generalRisks} />
-      </div>
-
-      {/* 3. Previsão Horária de Aprendizado de Máquina (24h — HistGradientBoostingRegressor TU) */}
-      <MlForecastSection mlForecast={weather.mlForecast} />
-
-      {/* 4. Atalho Rápido para as Culturas Monitoradas */}
+      
+      {/* 2. Atalho Rápido para as Culturas Monitoradas */}
       <div className="card shadow-sm border-0 rounded-4 mb-4 bg-white">
         <div className="card-body p-4">
           <div className="d-flex flex-wrap justify-content-between align-items-center mb-3">
@@ -130,8 +122,17 @@ export default function HomeView({ weather, plants, onSelectPlant, onNavigateToP
         </div>
       </div>
 
-      {/* 5. Previsão HG Brasil (5 Dias) */}
+      {/* 3. Banner de Riscos Climáticos Gerais (Granizo, Calor, Precipitação, Vento) */}
+      <div id="secao-riscos">
+        <RiskAlertsBanner risks={weather.generalRisks} />
+      </div>
+
+      {/* 4. Previsão HG Brasil (5 Dias) */}
       <ForecastWidget forecast={weather.forecast} />
+
+      {/* 5. Previsão Horária de Aprendizado de Máquina (24h — HistGradientBoostingRegressor TU) */}
+      <MlForecastSection mlForecast={weather.mlForecast} />
+
     </div>
   );
 }

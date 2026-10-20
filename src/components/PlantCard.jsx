@@ -32,7 +32,19 @@ export default function PlantCard({ plant, onSelectPlant }) {
   return (
     <div className="card shadow-sm border-0 rounded-4 overflow-hidden h-100 plant-card transition-card bg-white">
       {/* Card Header with Plant Info & Image */}
-      <div className="position-relative">
+      <div
+        className="position-relative cursor-pointer"
+        onClick={() => onSelectPlant(plant)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onSelectPlant(plant);
+          }
+        }}
+        role="button"
+        tabIndex="0"
+        title={`Ver diretrizes e manejo de ${plant.name}`}
+      >
         <img
           src={plant.image}
           alt={plant.name}
@@ -148,45 +160,6 @@ export default function PlantCard({ plant, onSelectPlant }) {
             </div>
           </div>
         </div>
-
-        {/* 1.5. PROJEÇÃO 24H POR APRENDIZADO DE MÁQUINA (HGB TU) */}
-        {plant.mlPrediction && plant.mlPrediction.thresholds && (
-          <div className="mb-3 p-2.5 rounded-3 bg-primary-subtle bg-opacity-25 border border-primary border-opacity-25">
-            <div className="d-flex justify-content-between align-items-center mb-1.5">
-              <span className="fw-bold text-primary-emphasis small" style={{ fontSize: '0.75rem' }}>
-                <i className="bi bi-cpu-fill text-primary me-1"></i>
-                Projeção ML (Próximas 24h)
-              </span>
-              <span className="badge bg-primary text-white rounded-pill" style={{ fontSize: '0.62rem' }}>
-                HGB-TU 24h
-              </span>
-            </div>
-            <div className="d-flex flex-column gap-1">
-              {Object.entries(plant.mlPrediction.thresholds).map(([ruleKey, ruleData]) => {
-                const labelMap = {
-                  temperature_above_26c: 'Temp > 26°C',
-                  temperature_above_28c: 'Temp > 28°C',
-                  humidity_above_80pct: 'Umid > 80%',
-                  humidity_above_60pct: 'Umid > 60%',
-                  temperature_below_14c: 'Temp < 14°C',
-                  humidity_above_75pct: 'Umid > 75%',
-                  temperature_above_24c: 'Temp > 24°C'
-                };
-                const label = labelMap[ruleKey] || ruleKey;
-                const hasHours = ruleData.hours_count > 0;
-                return (
-                  <div key={ruleKey} className="d-flex justify-content-between align-items-center small" style={{ fontSize: '0.73rem' }}>
-                    <span className="text-secondary">{label}:</span>
-                    <span className={hasHours ? 'fw-bold text-danger-emphasis' : 'text-success fw-semibold'}>
-                      {ruleData.hours_count}h previstas (seq: {ruleData.longest_sequence_hours}h)
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
         {/* 2. SEÇÃO DE RISCOS ESPECÍFICOS DA PLANTA */}
         <div className="mb-3">
           <div className="d-flex align-items-center justify-content-between mb-2">
