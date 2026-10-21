@@ -120,7 +120,7 @@ export const mockGeneralWeather = {
           temperature_above_30c: { threshold: 30.0, direction: "above", hours_count: 0, longest_sequence_hours: 0, first_event_at: null, peak_value: 29.8 },
           humidity_above_75pct: { threshold: 75.0, direction: "above", hours_count: 8, longest_sequence_hours: 8, first_event_at: new Date(Date.now() + 10 * 3600000).toISOString(), peak_value: 83.0 }
         },
-        alface_solaris: {
+        alface_crespa: {
           temperature_above_26c: { threshold: 26.0, direction: "above", hours_count: 9, longest_sequence_hours: 9, first_event_at: new Date(Date.now() + 1 * 3600000).toISOString(), peak_value: 29.8 },
           temperature_above_28c: { threshold: 28.0, direction: "above", hours_count: 5, longest_sequence_hours: 5, first_event_at: new Date(Date.now() + 2 * 3600000).toISOString(), peak_value: 29.8 },
           humidity_above_80pct: { threshold: 80.0, direction: "above", hours_count: 4, longest_sequence_hours: 4, first_event_at: new Date(Date.now() + 12 * 3600000).toISOString(), peak_value: 83.0 }
@@ -145,14 +145,14 @@ export const mockGeneralWeather = {
     alerts: [
       {
         code: "ALFACE_THERMAL_STRESS_26C",
-        context: "alface_solaris",
+        context: "alface_crespa",
         severity: "warning",
         metric: "temperature_c",
         threshold: 26.0,
         hours_above_threshold: 9,
         longest_sequence_hours: 9,
         first_event_at: new Date(Date.now() + 1 * 3600000).toISOString(),
-        message: "Alface Solaris: 9h previstas acima de 26°C (maior sequência: 9h). Atenção a tipburn e ventilação."
+        message: "Alface Crespa: 9h previstas acima de 26°C (maior sequência: 9h). Atenção a tipburn e ventilação."
       },
       {
         code: "ROSA_EXCESS_HUMIDITY_60PCT",
@@ -179,16 +179,16 @@ export const mockGeneralWeather = {
   }
 };
 
-// Culturas foco: Alface Solaris, Salsinha e Rosa do Deserto
+// Culturas foco: Alface Crespa, Salsinha e Rosa do Deserto
 export const mockPlants = [
   {
-    id: "alface-solaris",
-    name: "Alface Solaris",
-    scientificName: "Lactuca sativa var. capitata (Solaris)",
+    id: "alface-crespa",
+    name: "Alface Crespa",
+    scientificName: "Lactuca sativa var. capitata (Crespa)",
     category: "Hortaliça Folhosa",
     badge: "Atenção: Stress Térmico",
     badgeLevel: "warning",
-    image: "https://images.unsplash.com/photo-1556801712-76c8eb07bbc9?auto=format&fit=crop&w=600&q=80",
+    image: "https://media02.stockfood.com/largepreviews/MzQxMTQwNzcx/11004541-Lettuce-lactuca-sativa-var-capitata.jpg",
     description: "Variedade selecionada para cultivo protegido, suscetível a queimaduras nas bordas foliares em períodos de alta radiação e calor.",
     metrics: {
       humidity: {
@@ -224,7 +224,7 @@ export const mockPlants = [
       }
     },
     mlPrediction: {
-      contextKey: "alface_solaris",
+      contextKey: "alface_crespa",
       status: "success",
       isSimulatedFallback: true,
       summaryTemperature: { minimum_c: 20.2, maximum_c: 29.8, mean_c: 25.0 },
@@ -239,7 +239,7 @@ export const mockPlants = [
         {
           code: "ALFACE_THERMAL_STRESS_26C",
           severity: "warning",
-          message: "Alface Solaris: 9h previstas acima de 26°C (maior sequência: 9h). Atenção a tipburn e ventilação."
+          message: "Alface Crespa: 9h previstas acima de 26°C (maior sequência: 9h). Atenção a tipburn e ventilação."
         }
       ]
     },

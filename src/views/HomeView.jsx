@@ -18,7 +18,7 @@ export default function HomeView({ weather, plants, onSelectPlant, onNavigateToP
             Bem-vindo ao Viveiro Bioterra
           </h1>
           <p className="lead fs-6 text-white-50 mb-4 max-w-xl">
-            Monitoramento de condições meteorológicas externas de referência para apoio ao manejo de <strong>Alface Solaris</strong>, <strong>Salsinha</strong> e <strong>Rosa do Deserto</strong>.
+            Monitoramento de condições meteorológicas externas de referência para apoio ao manejo de <strong>Alface Crespa</strong>, <strong>Salsinha</strong> e <strong>Rosa do Deserto</strong>.
           </p>
           <div className="d-flex flex-wrap gap-2">
             <button
@@ -56,7 +56,7 @@ export default function HomeView({ weather, plants, onSelectPlant, onNavigateToP
 
       {/* 1. Métricas Climáticas em Tempo Real */}
       <GeneralMetrics weather={weather} />
-      
+
       {/* 2. Atalho Rápido para as Culturas Monitoradas */}
       <div className="card shadow-sm border-0 rounded-4 mb-4 bg-white">
         <div className="card-body p-4">
